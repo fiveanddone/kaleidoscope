@@ -1,0 +1,2 @@
+# kaleidoscope
+Kaleidoscope Javascript Class
