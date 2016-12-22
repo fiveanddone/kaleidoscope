@@ -6,7 +6,7 @@ export default class Kaleidoscope {
     constructor(texturePath, slices){
 
         //Number of slices
-        this.slices = 8;
+        this.slices = slices;
         this.sprites = [];
         this.w = window.innerWidth;
         this.h = window.innerHeight;
