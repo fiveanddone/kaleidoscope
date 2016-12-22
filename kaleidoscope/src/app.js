@@ -1,6 +1,10 @@
 // Load PIXI
 var PIXI = require('pixi.js');
+import Kaleidoscope from './kaleidoscope.js';
 
+var k = new Kaleidoscope("./bin/texture.png", 8);
+//console.log(Kaleidoscope)
+/*
 //Number of slices
 var slices = 8;
 window.sprites = [];
@@ -101,12 +105,12 @@ function setup() {
             sprites[i].children[1].tilePosition.x += 3;
             sprites[i].children[1].tilePosition.y -= 0.5;
 
-            /*if( i % 2 != 0 ){
-                sprites[i].children[1].rotation += Math.sin(0.01);// 0.009;
+            //if( i % 2 != 0 ){
+                //sprites[i].children[1].rotation += Math.sin(0.01);// 0.009;
 
-            }else{
-                sprites[i].children[1].rotation -= Math.sin(0.01);//0.009;
-            }*/
+            //}else{
+                //sprites[i].children[1].rotation -= Math.sin(0.01);//0.009;
+            //}
         }
 
         //Render the stage to see the animation
@@ -117,4 +121,4 @@ function setup() {
     gameLoop();
 }
 
-
+*/
