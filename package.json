@@ -1,0 +1,24 @@
+{
+  "name": "kaleidoscope",
+  "version": "1.0.0",
+  "description": "Kaleidoscope Javascript Class",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiveanddone/kaleidoscope.git"
+  },
+  "author": "Joel Caballero",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fiveanddone/kaleidoscope/issues"
+  },
+  "homepage": "https://github.com/fiveanddone/kaleidoscope#readme",
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "pixi.js": "^4.3.0"
+  }
+}
