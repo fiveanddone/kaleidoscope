@@ -12,7 +12,7 @@ export default class Kaleidoscope {
         this.h = window.innerHeight;
 
         //Create the renderer
-        this.renderer = PIXI.autoDetectRenderer(this.w, this.h, {antialias: true, transparent: false, resolution: 1});
+        this.renderer = PIXI.autoDetectRenderer(this.w, this.h, {antialias: true, transparent: true, resolution: 1});
 
         //Add the canvas to the HTML document
         document.body.appendChild(this.renderer.view);
