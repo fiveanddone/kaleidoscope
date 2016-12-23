@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var _kaleidoscope = __webpack_require__(1);
 
@@ -52,7 +52,19 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var kaleidoscope = new _kaleidoscope2.default("./bin/texture.png", 16);
+	function map(value, min1, max1, min2, max2) {
+	    return min2 + (max2 - min2) * ((value - min1) / (max1 - min1));
+	}
+
+	var kaleidoscope = new _kaleidoscope2.default("./bin/texture.png", 8);
+
+	//kaleidoscope.speedX = 50;
+
+
+	window.addEventListener('mousemove', function (e) {
+	    kaleidoscope.speedX = map(e.clientX, 0, window.innerWidth, -3.0, 3.0);
+	    kaleidoscope.speedY = map(e.clientY, 0, window.innerHeight, -3.0, 3.0);
+	});
 
 /***/ },
 /* 1 */
@@ -72,6 +84,8 @@
 
 	var Kaleidoscope = function () {
 	    function Kaleidoscope(texturePath, slices) {
+	        var _this = this;
+
 	        _classCallCheck(this, Kaleidoscope);
 
 	        //Number of slices
@@ -79,6 +93,8 @@
 	        this.sprites = [];
 	        this.w = window.innerWidth;
 	        this.h = window.innerHeight;
+	        this.sX = 3.0;
+	        this.sY = 0.5;
 
 	        //Create the renderer
 	        this.renderer = PIXI.autoDetectRenderer(this.w, this.h, { antialias: true, transparent: true, resolution: 1 });
@@ -94,10 +110,35 @@
 
 	        this.TextureFile = texturePath;
 
-	        PIXI.loader.add(this.TextureFile).load(this.setup.bind(this));
+	        PIXI.loader.add(this.TextureFile).load(function () {
+	            _this.setup();
+	            _this.loop();
+	        });
+
+	        //listners
+	        window.addEventListener('resize', this.onResize.bind(this));
 	    }
 
 	    _createClass(Kaleidoscope, [{
+	        key: 'setup',
+	        value: function setup() {
+
+	            for (var i = 0; i < this.slices; i++) {
+
+	                var isOdd = i % 2 != 0;
+
+	                var angle = i * Math.PI / (this.slices / 2);
+
+	                var sprite = this.createSlice(isOdd);
+	                sprite.x = this.w * 0.5;
+	                sprite.y = this.h * 0.5;
+	                sprite.rotation = angle;
+	                this.sprites.push(sprite);
+
+	                this.stage.addChild(sprite);
+	            }
+	        }
+	    }, {
 	        key: 'createSlice',
 	        value: function createSlice(odd) {
 
@@ -132,6 +173,7 @@
 	            //if we don't do this, they don't mirror correctly
 	            //rotating this so it makes more sense
 	            //The flip (scale.x) needs to occur at the seam
+	            // 90 degrees - the angle cut in half
 	            mask.rotation = 1.5707963267948966 - angle * 0.5;
 
 	            container.addChild(mask);
@@ -142,17 +184,17 @@
 	            return container;
 	        }
 	    }, {
-	        key: 'gameLoop',
-	        value: function gameLoop() {
+	        key: 'loop',
+	        value: function loop() {
 
 	            //Loop this function at 60 frames per second
-	            requestAnimationFrame(this.gameLoop.bind(this));
+	            requestAnimationFrame(this.loop.bind(this));
 
 	            //Move the cat 1 pixel to the right each frame
 	            for (var i = 0; i < this.sprites.length; ++i) {
 
-	                this.sprites[i].children[1].tilePosition.x += 3;
-	                this.sprites[i].children[1].tilePosition.y -= 0.5;
+	                this.sprites[i].children[1].tilePosition.x += this.sX;
+	                this.sprites[i].children[1].tilePosition.y -= this.sY;
 
 	                /*if( i % 2 != 0 ){
 	                    sprites[i].children[1].rotation += Math.sin(0.01);// 0.009;
@@ -165,25 +207,32 @@
 	            this.renderer.render(this.stage);
 	        }
 	    }, {
-	        key: 'setup',
-	        value: function setup() {
+	        key: 'onResize',
+	        value: function onResize() {
 
-	            for (var i = 0; i < this.slices; i++) {
+	            for (var i = 0; i < this.sprites.length; i++) {
 
-	                var isOdd = i % 2 != 0;
-
-	                var angle = i * Math.PI / (this.slices / 2);
-
-	                var sprite = this.createSlice(isOdd);
-	                sprite.x = this.w * 0.5;
-	                sprite.y = this.h * 0.5;
-	                sprite.rotation = angle;
-	                this.sprites.push(sprite);
-
-	                this.stage.addChild(sprite);
+	                this.sprites[i].destroy();
 	            }
 
-	            this.gameLoop();
+	            this.sprites = [];
+
+	            this.w = window.innerWidth;
+	            this.h = window.innerHeight;
+
+	            this.renderer.resize(this.w, this.h);
+
+	            this.setup();
+	        }
+	    }, {
+	        key: 'speedX',
+	        set: function set(v) {
+	            this.sX = v;
+	        }
+	    }, {
+	        key: 'speedY',
+	        set: function set(v) {
+	            this.sY = v;
 	        }
 	    }]);
 

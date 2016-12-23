@@ -10,6 +10,8 @@ export default class Kaleidoscope {
         this.sprites = [];
         this.w = window.innerWidth;
         this.h = window.innerHeight;
+        this.sX = 3.0;
+        this.sY = 0.5;
 
         //Create the renderer
         this.renderer = PIXI.autoDetectRenderer(this.w, this.h, {antialias: true, transparent: true, resolution: 1});
@@ -27,9 +29,36 @@ export default class Kaleidoscope {
 
         PIXI.loader
             .add(this.TextureFile)
-            .load(this.setup.bind(this));
+            .load( ()=>{
+                this.setup();
+                this.loop();
+            });
+
+        //listners
+        window.addEventListener('resize', this.onResize.bind(this) );
+
     }
 
+    setup() {
+
+
+        for (var i = 0; i < this.slices; i++) {
+
+            var isOdd = i % 2 != 0;
+
+            var angle = i * Math.PI / (this.slices / 2);
+
+            var sprite = this.createSlice(isOdd);
+                sprite.x = this.w * 0.5;
+                sprite.y = this.h * 0.5;
+                sprite.rotation = angle;
+                this.sprites.push( sprite );
+
+            this.stage.addChild( sprite );
+
+        }
+
+    }
 
     createSlice(odd) {
 
@@ -64,6 +93,7 @@ export default class Kaleidoscope {
         //if we don't do this, they don't mirror correctly
         //rotating this so it makes more sense
         //The flip (scale.x) needs to occur at the seam
+        // 90 degrees - the angle cut in half
         mask.rotation = 1.5707963267948966 - angle * 0.5;
 
         container.addChild(mask);
@@ -75,16 +105,16 @@ export default class Kaleidoscope {
         return container;
     }
 
-    gameLoop() {
+    loop() {
 
         //Loop this function at 60 frames per second
-        requestAnimationFrame(this.gameLoop.bind(this));
+        requestAnimationFrame(this.loop.bind(this));
 
         //Move the cat 1 pixel to the right each frame
         for (var i = 0; i < this.sprites.length; ++i) {
 
-            this.sprites[i].children[1].tilePosition.x += 3;
-            this.sprites[i].children[1].tilePosition.y -= 0.5;
+            this.sprites[i].children[1].tilePosition.x += this.sX;
+            this.sprites[i].children[1].tilePosition.y -= this.sY;
 
             /*if( i % 2 != 0 ){
                 sprites[i].children[1].rotation += Math.sin(0.01);// 0.009;
@@ -98,27 +128,28 @@ export default class Kaleidoscope {
         this.renderer.render(this.stage);
     }
 
-    setup() {
+    onResize(){
 
+        for(var i =0; i < this.sprites.length; i++){
 
-        for (var i = 0; i < this.slices; i++) {
-
-            var isOdd = i % 2 != 0;
-
-            var angle = i * Math.PI / (this.slices / 2);
-
-            var sprite = this.createSlice(isOdd);
-                sprite.x = this.w * 0.5;
-                sprite.y = this.h * 0.5;
-                sprite.rotation = angle;
-                this.sprites.push( sprite );
-
-            this.stage.addChild( sprite );
-
+            this.sprites[i].destroy();
         }
 
-        this.gameLoop();
+        this.sprites = [];
+
+        this.w = window.innerWidth;
+        this.h = window.innerHeight;
+
+        this.renderer.resize(this.w, this.h);
+
+        this.setup();
     }
 
+    set speedX(v){
+        this.sX = v;
+    }
 
+    set speedY(v){
+        this.sY = v;
+    }
 }
