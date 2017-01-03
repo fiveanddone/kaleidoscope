@@ -81,6 +81,7 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var PIXI = __webpack_require__(2);
+	var _self = {};
 
 	var Kaleidoscope = function () {
 	    function Kaleidoscope(texturePath, slices) {
@@ -88,6 +89,7 @@
 
 	        _classCallCheck(this, Kaleidoscope);
 
+	        _self = this;
 	        //Number of slices
 	        this.slices = slices;
 	        this.sprites = [];
@@ -188,13 +190,13 @@
 	        value: function loop() {
 
 	            //Loop this function at 60 frames per second
-	            requestAnimationFrame(this.loop.bind(this));
+	            requestAnimationFrame(_self.loop);
 
 	            //Move the cat 1 pixel to the right each frame
-	            for (var i = 0; i < this.sprites.length; ++i) {
+	            for (var i = 0; i < _self.sprites.length; ++i) {
 
-	                this.sprites[i].children[1].tilePosition.x += this.sX;
-	                this.sprites[i].children[1].tilePosition.y -= this.sY;
+	                _self.sprites[i].children[1].tilePosition.x += _self.sX;
+	                _self.sprites[i].children[1].tilePosition.y -= _self.sY;
 
 	                /*if( i % 2 != 0 ){
 	                    sprites[i].children[1].rotation += Math.sin(0.01);// 0.009;
@@ -204,7 +206,7 @@
 	            }
 
 	            //Render the stage to see the animation
-	            this.renderer.render(this.stage);
+	            _self.renderer.render(_self.stage);
 	        }
 	    }, {
 	        key: 'onResize',
